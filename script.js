@@ -57,6 +57,17 @@ function checkStatus() {
     return "playing"
 }
 
+function displayBoard(board) {
+    let gameContainer = document.getElementById("game-container");
+    board.forEach((val) => {
+        let piece = document.createElement("div");
+        piece.classList.add("piece");
+        if (val !== null) {
+            piece.textContent = val;
+        }
+        gameContainer.appendChild(piece);
+    })
+}
 
 
 takeTurn(0)
@@ -67,3 +78,4 @@ takeTurn(8)
 takeTurn(3)
 console.log(checkStatus()) 
 console.log(renderBoard(Gameboard.gameboard))
+displayBoard(Gameboard.gameboard);
