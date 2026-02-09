@@ -59,14 +59,17 @@ function checkStatus() {
 
 function displayBoard(board) {
     let gameContainer = document.getElementById("game-container");
+    let boardContainer = document.createElement("board-container");
+    boardContainer.classList.add("board-container")
     board.forEach((val) => {
         let piece = document.createElement("div");
         piece.classList.add("piece");
         if (val !== null) {
             piece.textContent = val;
         }
-        gameContainer.appendChild(piece);
+        boardContainer.appendChild(piece);
     })
+    gameContainer.appendChild(boardContainer);
 }
 
 
