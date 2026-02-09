@@ -1,5 +1,15 @@
 const Gameboard = {
     gameboard: [null, null, null, null, null, null, null, null, null],
+    winningSets: [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+        [0, 3, 6],
+        [1, 3, 7],
+        [2, 5, 8],
+    ],
     player1: {
         icon: "X",
         name: null,
@@ -22,6 +32,7 @@ function renderBoard(board) {
 
 function takeTurn(position) {
     if (position > Gameboard.gameboard.length) {return "Error position doesn't exisist"};
+    if (Gameboard.gameboard[position] !== null) {return}
     let currentIcon = Gameboard.currentIcon;
     Gameboard.gameboard[position] = currentIcon;
     switchCurrentIcon();
@@ -31,9 +42,28 @@ function switchCurrentIcon() {
     Gameboard.currentIcon = Gameboard.currentIcon === "X" ? "O" : "X";
 }
 
-takeTurn(2)
-takeTurn(1)
-takeTurn(8)
-takeTurn(4)
+function checkStatus() {
+    let sets = Gameboard.winningSets;
+    let board = Gameboard.gameboard
+    for (let i = 0; i < sets.length; i++) {
+        let [a, b, c] = sets[i];
+        if (board[a] === board[b] && board[a] === board[c] && board[a] && board[b] && board[c]) {
+            return `${board[a]} won`
+        }
+    }
+    if (board.every((val) => val !== null)) {
+        return "tie"
+    }
+    return "playing"
+}
+
+
+
 takeTurn(0)
+takeTurn(3)
+takeTurn(4)
+takeTurn(5)
+takeTurn(8) 
+takeTurn(3)
+console.log(checkStatus()) 
 console.log(renderBoard(Gameboard.gameboard))
