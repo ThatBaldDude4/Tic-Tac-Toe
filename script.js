@@ -61,14 +61,16 @@ function displayBoard(board) {
     let gameContainer = document.getElementById("game-container");
     let boardContainer = document.createElement("board-container");
     boardContainer.classList.add("board-container")
-    board.forEach((val) => {
+
+    for (let i = 0; i < board.length; i++) {
         let piece = document.createElement("div");
         piece.classList.add("piece");
-        if (val !== null) {
-            piece.textContent = val;
+        piece.setAttribute("data-index", i);
+        if (board[i] !== null) {
+            piece.textContent = board[i];
         }
         boardContainer.appendChild(piece);
-    })
+    }
     gameContainer.appendChild(boardContainer);
 }
 
