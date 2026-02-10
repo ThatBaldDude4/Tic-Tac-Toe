@@ -80,8 +80,15 @@ function displayBoard(board) {
         boardContainer.appendChild(piece);
     }
     gameContainer.appendChild(boardContainer);
-    gameContainer.appendChild(currentPlayerEl)
+    gameContainer.appendChild(currentPlayerEl);
+    if (Gameboard.status === 'won') {
+        let winnerElement = document.createElement("div");
+        winnerElement.textContent = `${Gameboard.winner} won`;
+        gameContainer.removeChild(currentPlayerEl);
+        gameContainer.appendChild(winnerElement);
+    }
 }
+
 function resetGame() {
     Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
     Gameboard.currentIcon = "X";
@@ -93,7 +100,6 @@ function gameTurn(position) {
     takeTurn(position);
     setStatus();
     displayBoard(Gameboard.gameboard)
-    console.log(renderBoard(Gameboard.gameboard));
 }
 
 document.addEventListener("click", (e) => {
