@@ -32,7 +32,8 @@ function renderBoard(board) {
 
 function takeTurn(position) {
     if (position > Gameboard.gameboard.length) {return "Error position doesn't exisist"};
-    if (Gameboard.gameboard[position] !== null) {return}
+    if (Gameboard.gameboard[position] !== null) {return};
+    if (Gameboard.status !== "playing") {return console.log("Game is already over")}
     let currentIcon = Gameboard.currentIcon;
     Gameboard.gameboard[position] = currentIcon;
     switchCurrentIcon();
@@ -42,19 +43,23 @@ function switchCurrentIcon() {
     Gameboard.currentIcon = Gameboard.currentIcon === "X" ? "O" : "X";
 }
 
-function checkStatus() {
+function setStatus() {
     let sets = Gameboard.winningSets;
     let board = Gameboard.gameboard
     for (let i = 0; i < sets.length; i++) {
         let [a, b, c] = sets[i];
         if (board[a] === board[b] && board[a] === board[c] && board[a] && board[b] && board[c]) {
-            return `${board[a]} won`
+            Gameboard.winner = board[a];
+            Gameboard.status = `won`;
+            return
         }
     }
     if (board.every((val) => val !== null)) {
-        return "tie"
+        Gameboard.status = "tie";
+        return
     }
-    return "playing"
+    Gameboard.status = "playing";
+    return 
 }
 
 function displayBoard(board) {
@@ -73,6 +78,18 @@ function displayBoard(board) {
     }
     gameContainer.appendChild(boardContainer);
 }
+function resetGame() {
+    Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
+    Gameboard.currentIcon = "X";
+    Gameboard.status = "playing";
+    Gameboard.winner = null;
+}
+
+function gameTurn(position) {
+    takeTurn(position);
+    setStatus();
+    console.log(renderBoard(Gameboard.gameboard));
+}
 
 
 takeTurn(0)
@@ -84,3 +101,4 @@ takeTurn(3)
 console.log(checkStatus()) 
 console.log(renderBoard(Gameboard.gameboard))
 displayBoard(Gameboard.gameboard);
+
