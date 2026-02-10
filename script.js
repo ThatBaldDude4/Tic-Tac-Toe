@@ -18,37 +18,32 @@ const Gameboard = {
         icon: "O",
         name: null,
     },
-    currentIcon: "X",
     status: "playing", // | "won" | "tie"
     winner: null, // player / icon
 }
 
-function renderBoard(board) {
-    let row1 = `${board[0]} ${board[1]} ${board[2]}`;
-    let row2 = `${board[3]} ${board[4]} ${board[5]}`;
-    let row3 = `${board[6]} ${board[7]} ${board[8]}`;
-    return `${row1}\n${row2}\n${row3}\n`
-}
+const gameController = {
+    currentIcon: "X",
 
-function takeTurn(position) {
-    if (position >= Gameboard.gameboard.length) {return "Error position doesn't exisist"};
-    if (Gameboard.gameboard[position] !== null) {return};
-    if (Gameboard.status !== "playing") {return console.log("Game is already over")}
-    let currentIcon = Gameboard.currentIcon;
-    Gameboard.gameboard[position] = currentIcon;
-    switchCurrentIcon();
-}
+    takeTurn(position) {
+        if (position >= Gameboard.gameboard.length) {return "Error position doesn't exisist"};
+        if (Gameboard.gameboard[position] !== null) {return};
+        if (Gameboard.status !== "playing") {return console.log("Game is already over")}
+        Gameboard.gameboard[position] = this.currentIcon;
+        console.log(Gameboard.gameboard[position])
+        this.switchCurrentIcon();
+    },
 
-function switchCurrentIcon() {
-    Gameboard.currentIcon = Gameboard.currentIcon === "X" ? "O" : "X";
-}
+    switchCurrentIcon() {
+        this.currentIcon = this.currentIcon === "X" ? "O" : "X";
+    },
 
-function setStatus() {
-    let sets = Gameboard.winningSets;
-    let board = Gameboard.gameboard
-    for (let i = 0; i < sets.length; i++) {
-        let [a, b, c] = sets[i];
-        if (board[a] === board[b] && board[a] === board[c] && board[a]) {
+    setStatus() {
+        let sets = Gameboard.winningSets;
+        let board = Gameboard.gameboard
+        for (let i = 0; i < sets.length; i++) {
+            let [a, b, c] = sets[i];
+            if (board[a] === board[b] && board[a] === board[c] && board[a]) {
             Gameboard.winner = board[a];
             Gameboard.status = `won`;
             return
@@ -60,6 +55,28 @@ function setStatus() {
     }
     Gameboard.status = "playing";
     return 
+    },
+
+    gameTurn(position) {
+        this.takeTurn(position);
+        this.setStatus();
+        displayBoard(Gameboard.gameboard)
+    },
+
+    resetGame() {
+        Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
+        this.currentIcon = "X";
+        Gameboard.status = "playing";
+        Gameboard.winner = null;
+        displayBoard(Gameboard.gameboard)
+    }
+}
+
+function renderBoard(board) {
+    let row1 = `${board[0]} ${board[1]} ${board[2]}`;
+    let row2 = `${board[3]} ${board[4]} ${board[5]}`;
+    let row3 = `${board[6]} ${board[7]} ${board[8]}`;
+    return `${row1}\n${row2}\n${row3}\n`
 }
 
 function displayBoard(board) {
@@ -68,7 +85,7 @@ function displayBoard(board) {
     let boardContainer = document.createElement("div");
     boardContainer.classList.add("board-container")
     let currentPlayerEl = document.createElement("div");
-    currentPlayerEl.textContent = Gameboard.currentIcon;
+    currentPlayerEl.textContent = gameController.currentIcon;
 
     for (let i = 0; i < board.length; i++) {
         let piece = document.createElement("div");
@@ -89,24 +106,18 @@ function displayBoard(board) {
     }
 }
 
-function resetGame() {
-    Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
-    Gameboard.currentIcon = "X";
-    Gameboard.status = "playing";
-    Gameboard.winner = null;
-}
-
 function gameTurn(position) {
-    takeTurn(position);
-    setStatus();
-    displayBoard(Gameboard.gameboard)
+    
 }
 
 document.addEventListener("click", (e) => {
-    gameTurn(e.target.dataset.index)
+    gameController.gameTurn(e.target.dataset.index)
 })
 
-document.getElementById("reset-btn").addEventListener("click", () => {resetGame()})
+document.getElementById("reset-btn").addEventListener("click", () => {gameController.resetGame()})
 
 displayBoard(Gameboard.gameboard)
+
+console.log(Gameboard.status)
+console.log(renderBoard(Gameboard.gameboard))
  
