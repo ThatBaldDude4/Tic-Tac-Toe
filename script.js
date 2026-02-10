@@ -58,6 +58,7 @@ const gameController = {
     },
 
     gameTurn(position) {
+        if (Gameboard.status === "not-started") {return}
         this.takeTurn(position);
         this.setStatus();
         displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
@@ -69,6 +70,17 @@ const gameController = {
         Gameboard.status = "playing";
         Gameboard.winner = null;
         displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
+    },
+
+    getPlayersName() {
+        player1 = document.getElementById("player-one-input").value;
+        player2 = document.getElementById("player-two-input").value;
+        if (!player1 || !player2) {
+            alert("Please input valid name for player1 and player2");
+            return;
+        }
+        Gameboard.player1.name = player1;
+        Gameboard.player2.name = player2;
     }
 }
 
@@ -106,16 +118,22 @@ const displayController = {
             gameContainer.removeChild(currentPlayerEl);
             gameContainer.appendChild(winnerElement);
         }
-    }
-}
+    },
 
+    toggleStartFunctionsContainer() {
+
+    },
+}
+/* 
 document.addEventListener("click", (e) => {
     gameController.gameTurn(e.target.dataset.index)
 })
-
+*/
 document.getElementById("reset-btn").addEventListener("click", () => {gameController.resetGame()})
-
-displayController.displayBoard(Gameboard.gameboard, Gameboard.status, gameController.currentIcon, Gameboard.winner)
+document.getElementById("start-btn").addEventListener("click", () => {
+    gameController.getPlayersName();
+})
+// displayController.displayBoard(Gameboard.gameboard, Gameboard.status, gameController.currentIcon, Gameboard.winner)
 
 console.log(Gameboard.status)
 console.log(displayController.renderBoard(Gameboard.gameboard))
