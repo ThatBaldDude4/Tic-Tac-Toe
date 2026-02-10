@@ -60,7 +60,7 @@ const gameController = {
     gameTurn(position) {
         this.takeTurn(position);
         this.setStatus();
-        displayBoard(Gameboard.gameboard)
+        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
     },
 
     resetGame() {
@@ -68,46 +68,45 @@ const gameController = {
         this.currentIcon = "X";
         Gameboard.status = "playing";
         Gameboard.winner = null;
-        displayBoard(Gameboard.gameboard)
+        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
     }
 }
 
-function renderBoard(board) {
-    let row1 = `${board[0]} ${board[1]} ${board[2]}`;
-    let row2 = `${board[3]} ${board[4]} ${board[5]}`;
-    let row3 = `${board[6]} ${board[7]} ${board[8]}`;
-    return `${row1}\n${row2}\n${row3}\n`
-}
+const displayController = {
+    renderBoard(board) {
+        let row1 = `${board[0]} ${board[1]} ${board[2]}`;
+        let row2 = `${board[3]} ${board[4]} ${board[5]}`;
+        let row3 = `${board[6]} ${board[7]} ${board[8]}`;
+        return `${row1}\n${row2}\n${row3}\n`
+    },
 
-function displayBoard(board) {
-    let gameContainer = document.getElementById("pieces-container");
-    gameContainer.innerHTML = "";
-    let boardContainer = document.createElement("div");
-    boardContainer.classList.add("board-container")
-    let currentPlayerEl = document.createElement("div");
-    currentPlayerEl.textContent = gameController.currentIcon;
+    displayBoard(board, status, currentIcon, winner) {
+        let gameContainer = document.getElementById("pieces-container");
+        gameContainer.innerHTML = "";
+        let boardContainer = document.createElement("div");
+        boardContainer.classList.add("board-container")
+        let currentPlayerEl = document.createElement("div");
+        currentPlayerEl.textContent = currentIcon;
+        console.log(currentPlayerEl.textContent)
 
-    for (let i = 0; i < board.length; i++) {
-        let piece = document.createElement("div");
-        piece.classList.add("piece");
-        piece.setAttribute("data-index", i);
-        if (board[i] !== null) {
-            piece.textContent = board[i];
+        for (let i = 0; i < board.length; i++) {
+            let piece = document.createElement("div");
+            piece.classList.add("piece");
+            piece.setAttribute("data-index", i);
+            if (board[i] !== null) {
+                piece.textContent = board[i];
+            }
+            boardContainer.appendChild(piece);
         }
-        boardContainer.appendChild(piece);
+        gameContainer.appendChild(boardContainer);
+        gameContainer.appendChild(currentPlayerEl);
+        if (status === 'won') {
+            let winnerElement = document.createElement("div");
+            winnerElement.textContent = `${winner} won`;
+            gameContainer.removeChild(currentPlayerEl);
+            gameContainer.appendChild(winnerElement);
+        }
     }
-    gameContainer.appendChild(boardContainer);
-    gameContainer.appendChild(currentPlayerEl);
-    if (Gameboard.status === 'won') {
-        let winnerElement = document.createElement("div");
-        winnerElement.textContent = `${Gameboard.winner} won`;
-        gameContainer.removeChild(currentPlayerEl);
-        gameContainer.appendChild(winnerElement);
-    }
-}
-
-function gameTurn(position) {
-    
 }
 
 document.addEventListener("click", (e) => {
@@ -116,8 +115,8 @@ document.addEventListener("click", (e) => {
 
 document.getElementById("reset-btn").addEventListener("click", () => {gameController.resetGame()})
 
-displayBoard(Gameboard.gameboard)
+displayController.displayBoard(Gameboard.gameboard, Gameboard.status, gameController.currentIcon, Gameboard.winner)
 
 console.log(Gameboard.status)
-console.log(renderBoard(Gameboard.gameboard))
+console.log(displayController.renderBoard(Gameboard.gameboard))
  
