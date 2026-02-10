@@ -135,7 +135,7 @@ document.getElementById("start-btn").addEventListener("click", () => {
     gameController.getPlayersName();
 })
 // displayController.displayBoard(Gameboard.gameboard, Gameboard.status, gameController.currentIcon, Gameboard.winner)
-
+// add above function call to a startGame() function
 console.log(Gameboard.status)
 console.log(displayController.renderBoard(Gameboard.gameboard))
 
