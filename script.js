@@ -7,7 +7,7 @@ const Gameboard = {
         [0, 4, 8],
         [2, 4, 6],
         [0, 3, 6],
-        [1, 3, 7],
+        [1, 4, 7],
         [2, 5, 8],
     ],
     player1: {
@@ -31,7 +31,7 @@ function renderBoard(board) {
 }
 
 function takeTurn(position) {
-    if (position > Gameboard.gameboard.length) {return "Error position doesn't exisist"};
+    if (position >= Gameboard.gameboard.length) {return "Error position doesn't exisist"};
     if (Gameboard.gameboard[position] !== null) {return};
     if (Gameboard.status !== "playing") {return console.log("Game is already over")}
     let currentIcon = Gameboard.currentIcon;
@@ -48,7 +48,7 @@ function setStatus() {
     let board = Gameboard.gameboard
     for (let i = 0; i < sets.length; i++) {
         let [a, b, c] = sets[i];
-        if (board[a] === board[b] && board[a] === board[c] && board[a] && board[b] && board[c]) {
+        if (board[a] === board[b] && board[a] === board[c] && board[a]) {
             Gameboard.winner = board[a];
             Gameboard.status = `won`;
             return
@@ -63,9 +63,12 @@ function setStatus() {
 }
 
 function displayBoard(board) {
-    let gameContainer = document.getElementById("game-container");
-    let boardContainer = document.createElement("board-container");
+    let gameContainer = document.getElementById("pieces-container");
+    gameContainer.innerHTML = "";
+    let boardContainer = document.createElement("div");
     boardContainer.classList.add("board-container")
+    let currentPlayerEl = document.createElement("div");
+    currentPlayerEl.textContent = Gameboard.currentIcon;
 
     for (let i = 0; i < board.length; i++) {
         let piece = document.createElement("div");
@@ -77,6 +80,7 @@ function displayBoard(board) {
         boardContainer.appendChild(piece);
     }
     gameContainer.appendChild(boardContainer);
+    gameContainer.appendChild(currentPlayerEl)
 }
 function resetGame() {
     Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
@@ -88,17 +92,15 @@ function resetGame() {
 function gameTurn(position) {
     takeTurn(position);
     setStatus();
+    displayBoard(Gameboard.gameboard)
     console.log(renderBoard(Gameboard.gameboard));
 }
 
+document.addEventListener("click", (e) => {
+    gameTurn(e.target.dataset.index)
+})
 
-takeTurn(0)
-takeTurn(3)
-takeTurn(4)
-takeTurn(5)
-takeTurn(8) 
-takeTurn(3)
-console.log(checkStatus()) 
-console.log(renderBoard(Gameboard.gameboard))
-displayBoard(Gameboard.gameboard);
+document.getElementById("reset-btn").addEventListener("click", () => {resetGame()})
 
+displayBoard(Gameboard.gameboard)
+ 
