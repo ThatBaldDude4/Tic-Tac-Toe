@@ -121,7 +121,8 @@ const displayController = {
     },
 
     toggleStartFunctionsContainer() {
-
+        let container = document.getElementById("start-functions-container");
+        container.toggleAttribute("hidden");
     },
 }
 /* 
@@ -137,4 +138,5 @@ document.getElementById("start-btn").addEventListener("click", () => {
 
 console.log(Gameboard.status)
 console.log(displayController.renderBoard(Gameboard.gameboard))
+
  
