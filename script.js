@@ -22,23 +22,23 @@ const Gameboard = {
     winner: null, // player / icon
 }
 
-const gameController = {
-    currentIcon: "X",
+const gameController = (function(){
+    let currentIcon = "X";
 
-    takeTurn(position) {
+    function takeTurn(position) {
         if (position >= Gameboard.gameboard.length) {return "Error position doesn't exisist"};
         if (Gameboard.gameboard[position] !== null) {return};
         if (Gameboard.status !== "playing") {return console.log("Game is already over")}
-        Gameboard.gameboard[position] = this.currentIcon;
+        Gameboard.gameboard[position] = currentIcon;
         console.log(Gameboard.gameboard[position])
-        this.switchCurrentIcon();
-    },
+        switchCurrentIcon();
+    };
 
-    switchCurrentIcon() {
-        this.currentIcon = this.currentIcon === "X" ? "O" : "X";
-    },
+    function switchCurrentIcon() {
+        currentIcon = currentIcon === "X" ? "O" : "X";
+    };
 
-    setStatus() {
+    function setStatus() {
         let sets = Gameboard.winningSets;
         let board = Gameboard.gameboard
         for (let i = 0; i < sets.length; i++) {
@@ -55,27 +55,27 @@ const gameController = {
     }
     Gameboard.status = "playing";
     return 
-    },
+    };
 
-    gameTurn(position) {
+    function gameTurn(position) {
         if (Gameboard.status === "not-started") {return}
-        this.takeTurn(position);
-        this.setStatus();
+        takeTurn(position);
+        setStatus();
         displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
-    },
+    };
 
-    resetGame() {
+    function resetGame() {
         if (Gameboard.status !== "not-started") {
             displayController.toggleStartFunctionsContainer();
         }
         Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
-        this.currentIcon = "X";
+        currentIcon = "X";
         Gameboard.status = "not-started";
         Gameboard.winner = null;
         displayController.emptyContainers();
-    },
+    };
 
-    getPlayersName() {
+    function getPlayersName() {
         player1 = document.getElementById("player-one-input").value;
         player2 = document.getElementById("player-two-input").value;
         if (!player1 || !player2) {
@@ -83,18 +83,24 @@ const gameController = {
             return;
         }
         return [player1, player2] // maybe return names as {player1, player2}, instead of mututating here
-    },
+    };
 
-    startGame() {
+    function startGame() {
         console.log("Gamestarted")
-        players = this.getPlayersName()
+        players = getPlayersName()
         Gameboard.player1 = players[0];
         Gameboard.player2 = players[1];
         Gameboard.status = "playing";
         displayController.toggleStartFunctionsContainer();
         displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner);
+    };
+
+    return {
+        startGame,
+        resetGame,
+        gameTurn,
     }
-}
+}())
 
 const displayController = {
     renderBoard(board) { 
@@ -158,12 +164,7 @@ document.getElementById("start-form").addEventListener("submit", (e) => {
     gameController.startGame()
 })
 
-document.getElementById("start-btn").addEventListener("click", () => {
-    
-})
 
-// add above function call to a startGame() function
+
 console.log(Gameboard.status)
 console.log(displayController.renderBoard(Gameboard.gameboard))
-
-  
