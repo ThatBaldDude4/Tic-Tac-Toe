@@ -72,6 +72,8 @@ const gameController = (function(){
         currentIcon = "X";
         Gameboard.status = "not-started";
         Gameboard.winner = null;
+        Gameboard.player1.name = null;
+        Gameboard.player2.name = null;
         displayController.emptyContainers();
     };
 
@@ -88,11 +90,12 @@ const gameController = (function(){
     function startGame() {
         console.log("Gamestarted")
         players = getPlayersName()
-        Gameboard.player1 = players[0];
-        Gameboard.player2 = players[1];
+        Gameboard.player1.name = players[0];
+        Gameboard.player2.name = players[1];
         Gameboard.status = "playing";
         displayController.toggleStartFunctionsContainer();
         displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner);
+        displayController.displayNames();
     };
 
     return {
@@ -147,7 +150,18 @@ const displayController = {
         document.getElementById("pieces-container").innerHTML = "";
         document.getElementById("player-one-input").value = "";
         document.getElementById("player-two-input").value = "";
+        document.getElementById("players-name-container").innerHTML = "";
     },
+
+    displayNames() {
+        playerContainer = document.getElementById("players-name-container");
+        let player1El = document.createElement("div");
+        let player2El = document.createElement("div");
+        player1El.textContent = `Player 1: ${Gameboard.player1.name}`;
+        player2El.textContent = `Player 2: ${Gameboard.player2.name}`;
+        playerContainer.appendChild(player1El);
+        playerContainer.appendChild(player2El);
+    }
 }
 
 document.addEventListener("click", (e) => {
@@ -162,9 +176,9 @@ document.getElementById("start-form").addEventListener("submit", (e) => {
     e.preventDefault();
     if (Gameboard.status !== "not-started") {return}
     gameController.startGame()
-})
+});
 
-
-
-console.log(Gameboard.status)
-console.log(displayController.renderBoard(Gameboard.gameboard))
+/*
+    Current Icon isn't displaying proplerly.
+    Double check display names is updating right.
+*/
