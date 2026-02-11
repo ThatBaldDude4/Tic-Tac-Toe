@@ -61,7 +61,7 @@ const gameController = (function(){
         if (Gameboard.status === "not-started") {return}
         takeTurn(position);
         setStatus();
-        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
+        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, currentIcon, Gameboard.winner)
     };
 
     function resetGame() {
@@ -94,7 +94,7 @@ const gameController = (function(){
         Gameboard.player2.name = players[1];
         Gameboard.status = "playing";
         displayController.toggleStartFunctionsContainer();
-        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner);
+        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, currentIcon, Gameboard.winner);
         displayController.displayNames();
     };
 
