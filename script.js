@@ -18,7 +18,7 @@ const Gameboard = {
         icon: "O",
         name: null,
     },
-    status: "playing", // | "won" | "tie"
+    status: "not-started", // | "won" | "tie"
     winner: null, // player / icon
 }
 
@@ -65,11 +65,14 @@ const gameController = {
     },
 
     resetGame() {
+        if (Gameboard.status !== "not-started") {
+            displayController.toggleStartFunctionsContainer();
+        }
         Gameboard.gameboard = [null, null, null, null, null, null, null, null, null];
         this.currentIcon = "X";
-        Gameboard.status = "playing";
+        Gameboard.status = "not-started";
         Gameboard.winner = null;
-        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner)
+        displayController.emptyContainers();
     },
 
     getPlayersName() {
@@ -79,13 +82,22 @@ const gameController = {
             alert("Please input valid name for player1 and player2");
             return;
         }
-        Gameboard.player1.name = player1;
-        Gameboard.player2.name = player2;
+        return [player1, player2] // maybe return names as {player1, player2}, instead of mututating here
+    },
+
+    startGame() {
+        console.log("Gamestarted")
+        players = this.getPlayersName()
+        Gameboard.player1 = players[0];
+        Gameboard.player2 = players[1];
+        Gameboard.status = "playing";
+        displayController.toggleStartFunctionsContainer();
+        displayController.displayBoard(Gameboard.gameboard, Gameboard.status, this.currentIcon, Gameboard.winner);
     }
 }
 
 const displayController = {
-    renderBoard(board) {
+    renderBoard(board) { 
         let row1 = `${board[0]} ${board[1]} ${board[2]}`;
         let row2 = `${board[3]} ${board[4]} ${board[5]}`;
         let row3 = `${board[6]} ${board[7]} ${board[8]}`;
@@ -124,19 +136,34 @@ const displayController = {
         let container = document.getElementById("start-functions-container");
         container.toggleAttribute("hidden");
     },
+
+    emptyContainers() {
+        document.getElementById("pieces-container").innerHTML = "";
+        document.getElementById("player-one-input").value = "";
+        document.getElementById("player-two-input").value = "";
+    },
 }
-/* 
+
 document.addEventListener("click", (e) => {
     gameController.gameTurn(e.target.dataset.index)
 })
-*/
-document.getElementById("reset-btn").addEventListener("click", () => {gameController.resetGame()})
-document.getElementById("start-btn").addEventListener("click", () => {
-    gameController.getPlayersName();
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+    gameController.resetGame()
 })
-// displayController.displayBoard(Gameboard.gameboard, Gameboard.status, gameController.currentIcon, Gameboard.winner)
+
+document.getElementById("start-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (Gameboard.status !== "not-started") {return}
+    gameController.startGame()
+})
+
+document.getElementById("start-btn").addEventListener("click", () => {
+    
+})
+
 // add above function call to a startGame() function
 console.log(Gameboard.status)
 console.log(displayController.renderBoard(Gameboard.gameboard))
 
- 
+  
